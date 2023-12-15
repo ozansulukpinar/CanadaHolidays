@@ -1,0 +1,12 @@
+ .option {
+     text-align: center;
+ }
+
+ .dark-mode {
+     background-color: black;
+     color: white;
+ }
+
+ button {
+     float: right;
+ }
