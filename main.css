@@ -10,3 +10,7 @@
  button {
      float: right;
  }
+
+ .value{
+    font-size: 10vw;
+ }

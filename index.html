@@ -5,23 +5,29 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="main.css" />
-    <title>Calendar Match</title>
+    <title>Canada Holidays</title>
 </head>
 
 <body>
     <button onclick="changeMode();">Dark Mode</button>
     <br />
     <div class="option">
-        <h2>Calendar Match</h2>
+        <h2>Canada Holidays</h2>
     </div>
     <br />
     <div class="option">
-        <select name="days" id="days"></select>
         <select name="months" id="months"></select>
+        <select name="days" id="days"></select>
     </div>
     <br />
     <div class="option">
-
+        <span class="text">This date is</span>
+        <br />
+        <span class="value" id="result"></span>
+        <br />
+        <span class="text">in Canada in</span>
+        <br />
+        <span class="value" id="year"></span>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

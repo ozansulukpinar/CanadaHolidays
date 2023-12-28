@@ -1,87 +1,97 @@
-var month = 1;
-var day = 1;
-var year = new Date().getFullYear();
+$(document).ready(function () {
+  populateDropdowns();
+  $('.text').hide();
+  var day, month;
 
-const d = new Date('"' + year + "-" + month + "-" + day + '"');
-
-var start = new Date(d.getFullYear(), 0, 0);
-var diff = (d - start) + ((start.getTimezoneOffset() - d.getTimezoneOffset()) * 60 * 1000);
-var oneDay = 1000 * 60 * 60 * 24;
-var day = Math.floor(diff / oneDay);
-
-var status = false;
-
-//ramadan 21/22/23 april
-//sacrifice 28/29/30 june/1 july
-
-//2023
-const ramadan = [111, 112, 113];
-const sacrifice = [179, 180, 181, 182];
-
-//365-366
-//354-355
-
-//11 days back
-
-checkingForCurrentYear();
-
-function getNewDays() {
-
-  year++;
-
-  ramadan.forEach((element, index) => {
-    if (element > 11) {
-      ramadan[index] = element - 11;
-    }
-    else { // if(element < 11)
-      if (year-- % 4 == 0) {
-        element += 366;
-      }
-      else {
-        element += 365;
-      }
-
-      ramadan[index] = element - 11;
-    }
+  $('select').on('change', function () {
+    checkingForCurrentYear();
   });
+});
 
-  sacrifice.forEach((element, index) => {
-
-    if (element > 11) {
-      sacrifice[index] = element - 11;
-    }
-    else { // if(element < 11
-      if (year-- % 4 == 0) {
-        element += 366;
-      }
-      else {
-        element += 365;
-      }
-
-      sacrifice[index] = element - 11;
-    }
-  });
+function populateTimeValues() {
+  day = $('#days').val();
+  month = $('#months').val();
 }
 
 function checkingForCurrentYear() {
-  do {
-    if (ramadan.includes(day) || sacrifice.includes(day)) {
-      status = true;
-    }
-    else {
-      getNewDays();
-    }
+  populateTimeValues();
+
+  if (isItValidDate()) {
+    $.getJSON('https://canada-holidays.ca/api/v1/holidays', function (data) {
+      var result = 'NOT HOLIDAY';
+
+      try {
+        data.holidays.forEach(function (item) {
+          if (item.id == 1)
+            $('#year').text(item.date.substring(0, 4));
+
+          if (item.date.substring(5) == month + '-' + day) {
+            result = "HOLIDAY";
+          }
+        });
+
+        $('.text').show();
+      }
+      catch (error) {
+        result = 'NOT APPLICABLE!';
+      }
+
+      $('#result').text(result);
+    });
   }
-  while (!status)
+  else {
+    $('.text').hide();
+    $('#result').text('');
+    $('#year').text('');
+    setTimeout(function () {
+      alert('Please select a valid date!');
+    }, 100);
+  }
 }
 
 function changeMode() {
   var element = document.body;
-  element.classList.toggle("dark-mode");
+  element.classList.toggle('dark-mode');
 
-  if ($("button").text().includes("Dark")) {
-    $("button").text("Light Mode");
+  if ($('button').text().includes('Dark')) {
+    $('button').text('Light Mode');
   } else {
-    $("button").text("Dark Mode");
+    $('button').text('Dark Mode');
   }
+}
+
+function populateDropdowns() {
+  for (var i = 1; i <= 31; i++) {
+    var temporaryI;
+    if (i < 10) { temporaryI = String(i).padStart(2, '0'); } else { temporaryI = i; }
+    $('#days').append($('<option></option>').val(temporaryI).text(i));
+  };
+
+  let data = [{ 'code': '01', 'name': 'January' },
+  { 'code': '02', 'name': 'February' },
+  { 'code': '03', 'name': 'March' },
+  { 'code': '04', 'name': 'April' },
+  { 'code': '05', 'name': 'May' },
+  { 'code': '06', 'name': 'June' },
+  { 'code': '07', 'name': 'July' },
+  { 'code': '08', 'name': 'August' },
+  { 'code': '09', 'name': 'September' },
+  { 'code': '10', 'name': 'October' },
+  { 'code': '11', 'name': 'November' },
+  { 'code': '12', 'name': 'December' }
+  ];
+
+  data.forEach(function (e, i) {
+    $('#months').append($('<option></option>').val(e.code).text(e.name));
+  });
+}
+
+function isItValidDate() {
+  var result = true;
+  var specificMonths = ['02', '04', '06', '09', '11'];
+
+  if ((day == '30' && month == '02') || (day == '31' && specificMonths.includes(month)))
+    result = false;
+
+  return result;
 }
