@@ -11,7 +11,7 @@ A page created with using HTML, CSS and JavaScript
 
 ## General info
 
-This is a single page which checks that date selected by user is a bank holiday of the year or not. The creator of the API used in the project is @pcraig3.
+This is a single page which checks that date selected by user is a bank holiday of the year or not. The creator of the API used in the project is [@pcraig3](https://github.com/pcraig3).
 
 ## Technologies
 
